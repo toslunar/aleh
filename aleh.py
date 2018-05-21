@@ -8,9 +8,9 @@ from pyglet import gl
 
 ACTIONS = np.array([
     [
-        [ 7,  4,  9],
-        [ 2,  0,  5],
-        [ 6,  3,  8],
+        [7, 4, 9],
+        [2, 0, 5],
+        [6, 3, 8],
     ],
     [
         [15, 12, 17],
@@ -18,38 +18,6 @@ ACTIONS = np.array([
         [14, 11, 16],
     ],
 ])
-"""
-action_strings = \
-    ["NOOP"          
-    ,"FIRE"          
-    ,"UP"            
-    ,"RIGHT"         
-    ,"LEFT"          
-    ,"DOWN"          
-    ,"UPRIGHT"       
-    ,"UPLEFT"        
-    ,"DOWNRIGHT"     
-    ,"DOWNLEFT"      
-    ,"UPFIRE"        
-    ,"RIGHTFIRE"     
-    ,"LEFTFIRE"      
-    ,"DOWNFIRE"      
-    ,"UPRIGHTFIRE"   
-    ,"UPLEFTFIRE"    
-    ,"DOWNRIGHTFIRE"
-    ,"DOWNLEFTFIRE"
-    ]
-
-
-ACTIONS = np.zeros((2, 3, 3), np.int64)
-for i, s in enumerate(action_strings):
-    lr = 0 if 'LEFT' in s else (2 if 'RIGHT' in s else 1)
-    ud = 0 if 'UP' in s else (2 if 'DOWN' in s else 1)
-    fire = 1 if 'FIRE' in s else 0
-    ACTIONS[fire, lr, ud] = i
-del action_strings
-print(ACTIONS)
-"""
 
 
 def main():
@@ -64,7 +32,6 @@ def main():
     ale = atari_py.ALEInterface()
     ale.loadROM(atari_py.get_game_path(args.name))
     ale_width, ale_height = ale.getScreenDims()
-    # action_set = ale.getMinimalActionSet()
     score = 0
 
     key = pyglet.window.key
@@ -89,11 +56,8 @@ def main():
         ale.reset_game()
         score = 0
 
-    # fps_display = pyglet.clock.ClockDisplay()
-
     def update(dt):
         nonlocal score
-        # action = action_set[np.random.randint(len(action_set))]
         action = get_action()
         score += ale.act(action)
         # print(score)
@@ -108,12 +72,12 @@ def main():
         )
         image.scale = screen_scale
         texture = image.get_texture()
-        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_NEAREST)
+        gl.glTexParameteri(
+            gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_NEAREST)
         texture.width *= screen_scale
         texture.height *= screen_scale
         window.clear()
         texture.blit(0, 0)
-        # fps_display.draw()
         info_strs = [
             "score: {}".format(score),
             "lives: {}".format(ale.lives()),
